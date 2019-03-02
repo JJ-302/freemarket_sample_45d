@@ -7,4 +7,11 @@ class ProductsController < ApplicationController
   def show
   end
 
+<<<<<<< HEAD
+=======
+  def confirm_purchase
+    render layout: false
+  end
+
+>>>>>>> JJ-302/master
 end
