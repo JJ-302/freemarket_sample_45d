@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create]
-  before_action :set_product, only: :show
+  before_action :authenticate_user!, only: [:new, :create, :update]
+  before_action :set_product, only: [:show, :edit, :update]
+  AlreadyMaximumPostedPhotos = 4
 
   def index
     @categories = Category.limit(3)
@@ -37,6 +38,18 @@ class ProductsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @product.user_id == current_user.id
+      @product.update(update_parameter)
+      redirect_to listing_path(@product)
+    else
+      render 'edit'
+    end
+  end
+
   private
 
   def set_product
@@ -45,5 +58,9 @@ class ProductsController < ApplicationController
 
   def product_parameter
     params.require(:product).permit(:name, :description, :first_category_id, :second_category_id, :third_category_id, :size, :product_status, :delivery_fee, :prefecture_id, :lead_time, :price, :transaction_status, product_images_attributes: [:image]).merge(user_id: current_user.id)
+  end
+
+  def update_parameter
+    params.require(:product).permit(:name, :description, :first_category_id, :second_category_id, :third_category_id, :size, :product_status, :delivery_fee, :prefecture_id, :lead_time, :price, :transaction_status, product_images_attributes: [:image, :id])
   end
 end
